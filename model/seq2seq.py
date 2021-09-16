@@ -9,9 +9,9 @@ import torch.nn.functional as F
 from data_preprocess.data_process import USE_CUDA
 
 
-class EnconderRNN(nn.Module):
+class EncoderRNN(nn.Module):
     def __init__(self, input_size, hidden_size, n_layers=1):
-        super(EnconderRNN, self).__init__()
+        super(EncoderRNN, self).__init__()
 
         self.input_size = input_size
         self.hidden_size = hidden_size

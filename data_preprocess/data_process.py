@@ -69,11 +69,11 @@ def read_langs(lang1, lang2, reverse=False):  # 获取平行预料，并进行�
     # 反转pairs, 实例化Lang
     if reverse:
         pairs = [list(reversed(p)) for p in pairs]
-        input_lang = Lang(lang2)
-        output_lang = Lang(lang1)
+        input_lang = Lang(lang1)
+        output_lang = Lang(lang2)
     else:
-        input_lang = Lang(lang2)
-        output_lang = Lang(lang1)
+        input_lang = Lang(lang1)
+        output_lang = Lang(lang2)
     return input_lang, output_lang, pairs
 
 
@@ -110,9 +110,9 @@ def prepare_data(lang1_name, lang2_name, reverse=False):
 
 def indexes_from_sentence(lang, sentence):
     if lang.name == 'cn':
-        return [lang.word2index[word] for word in sentence]
+        return [lang.word2index[word] for word in sentence if word in lang.word2index]
     else:
-        return [lang.word2index[word] for word in sentence.split(' ')]
+        return [lang.word2index[word] for word in sentence.split(' ') if word in lang.word2index]
 
 
 def variable_from_sentence(lang, sentence):
@@ -127,4 +127,4 @@ def variable_from_sentence(lang, sentence):
 def variables_from_pair(input_lang, output_lang, pair):
     input_variable = variable_from_sentence(input_lang, pair[0])
     target_variable = variable_from_sentence(output_lang, pair[1])
-    return (input_variable, target_variable)
+    return input_variable, target_variable
