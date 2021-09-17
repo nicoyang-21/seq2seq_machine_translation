@@ -18,7 +18,7 @@ class EncoderRNN(nn.Module):
         self.n_layers = n_layers
 
         self.embedding = nn.Embedding(input_size, hidden_size)
-        self.rnn = nn.RNN(hidden_size, hidden_size, n_layers)
+        self.rnn = nn.GRU(hidden_size, hidden_size, n_layers)
 
     def forward(self, word_inputs, hidden):
         seq_len = len(word_inputs)
@@ -42,7 +42,7 @@ class AttentionTDecoderRNN(nn.Module):
         self.dropout_p = dropout_p
 
         self.embedding = nn.Embedding(output_size, hidden_size)
-        self.rnn = nn.RNN(hidden_size, hidden_size, n_layer, dropout=dropout_p)
+        self.rnn = nn.GRU(hidden_size, hidden_size, n_layer, dropout=dropout_p)
         self.out = nn.Linear(hidden_size, output_size)
 
     def forward(self, word_input, last_hidden, output_en):

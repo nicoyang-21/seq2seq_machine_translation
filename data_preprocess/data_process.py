@@ -130,5 +130,14 @@ def variables_from_pair(input_lang, output_lang, pair):
     return input_variable, target_variable
 
 
-if __name__ == '__main__':
-    input_lang, output_lang, pairs =  prepare_data('cn', 'eng')
+def data_loader():
+    input_data, target_data = [], []
+    input_lang, output_lang, pairs = prepare_data('cn', 'eng')
+    for pair in pairs:
+        input_variable = variable_from_sentence(input_lang, pair[0])
+        target_variable = variable_from_sentence(output_lang, pair[1])
+        input_data.append(input_variable)
+        target_data.append(target_variable)
+    data_set = torch.utils.data.Dataset(input_data, target_data)
+    train_data = torch.utils.data.DataLoader(data_set, batch_size=128)
+    return train_data, input_lang, output_lang

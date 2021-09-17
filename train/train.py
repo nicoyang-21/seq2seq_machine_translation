@@ -12,8 +12,10 @@ import torch.nn as nn
 import torch.optim as optim
 from tqdm import tqdm
 
-from data_preprocess.data_process import read_langs, USE_CUDA, variables_from_pair, sos_token, eos_token, prepare_data
+from data_preprocess.data_process import read_langs, USE_CUDA, variables_from_pair, \
+    sos_token, eos_token, prepare_data
 from model.seq2seq import EncoderRNN, AttentionTDecoderRNN
+from model.seq2seq_network import seq2seq_network
 from train_function import train, time_since
 from data_preprocess.data_process import MAX_LENGTH, variable_from_sentence
 
@@ -38,7 +40,7 @@ def evaluate(sentence, max_length=MAX_LENGTH):
 
     # Run through decoder
     for di in range(max_length):
-        decoder_output, decoder_hidden = decoder(decoder_input, decoder_hidden)
+        decoder_output, decoder_hidden = decoder(decoder_input, decoder_hidden, encoder_outputs)
         # Choose top word from output
         topv, topi = decoder_output.data.topk(1)
         ni = topi[0][0]
@@ -84,8 +86,8 @@ if __name__ == '__main__':
 
     # 配置训练参数
     n_epochs = 1
-    plot_every = 100
-    print_every = 1000
+    plot_every = 10
+    print_every = 10
 
     start = time.time()
     plot_losses = []
@@ -93,15 +95,14 @@ if __name__ == '__main__':
     plot_loss_total = 0
 
     # 开始训练
-    for epoch in range(1, n_epochs+1):
+    for epoch in range(1, n_epochs + 1):
         print(f'第{epoch}次')
         for pair in tqdm(pairs, desc='Processing'):
             training_pair = variables_from_pair(input_lang, output_lang, pair)  # 从循环中获取训练数据
             input_variable = training_pair[0]
             target_variable = training_pair[1]
-
-            loss = train(input_variable, target_variable, encoder, decoder, encoder_optimizer, decoder_optimizer,
-                         criterion)
+            loss = seq2seq_network(input_variable, target_variable, encoder, decoder,
+                                   encoder_optimizer, decoder_optimizer, criterion)
             print_loss_total += loss
             plot_loss_total += loss
 
