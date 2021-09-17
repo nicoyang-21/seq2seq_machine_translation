@@ -46,13 +46,13 @@ def train(input_variable, target_variable, encoder, decoder, encoder_optimizer, 
     use_teacher_forcing = random.random() < teacher_forcing_ratio
     if use_teacher_forcing:  # 使用真实的目标此作为输入
         for di in range(target_length):
-            decoder_output, decoder_hidden = decoder(decoder_input, decoder_hidden)
+            decoder_output, decoder_hidden = decoder(decoder_input, decoder_hidden, encoder_outputs)
             loss += criterion(decoder_output, target_variable[di])
             decoder_input = target_variable[di]  # 目标的下一个输入词
 
     else:  # 使用网络的预测输出作为下一时刻的输出
         for di in range(target_length):
-            decoder_output, decoder_hidden = decoder(decoder_input, decoder_hidden)
+            decoder_output, decoder_hidden = decoder(decoder_input, decoder_hidden, encoder_outputs)
             loss += criterion(decoder_output, target_variable[di])
             topv, topi = decoder_output.data.topk(1)  # 获取输出最可能结果的index
             ni = topi[0][0]

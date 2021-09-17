@@ -95,8 +95,8 @@ def prepare_data(lang1_name, lang2_name, reverse=False):
 
     print('Indexing words..')
     for pair in pairs:
-        input_lang.index_word(pair[0])
-        output_lang.index_word(pair[1])
+        input_lang.index_words(pair[0])
+        output_lang.index_words(pair[1])
     return input_lang, output_lang, pairs
 
 
@@ -128,3 +128,7 @@ def variables_from_pair(input_lang, output_lang, pair):
     input_variable = variable_from_sentence(input_lang, pair[0])
     target_variable = variable_from_sentence(output_lang, pair[1])
     return input_variable, target_variable
+
+
+if __name__ == '__main__':
+    input_lang, output_lang, pairs =  prepare_data('cn', 'eng')
